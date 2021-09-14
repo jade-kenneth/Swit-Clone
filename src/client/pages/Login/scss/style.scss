@@ -1,0 +1,63 @@
+@import "../../../scss/abstract/index";
+.login_container {
+  height: 100vh;
+  color: $font-color;
+  @include flexCenter;
+  .sign_up {
+    background-color: $login-bg-color;
+    width: 500px;
+    height: auto;
+    @include flexCenterDirection(column);
+    box-sizing: content-box;
+    .sign_up_form {
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      width: 70%;
+      height: auto;
+
+      label {
+        font-weight: bold;
+        padding-top: 10px;
+      }
+      input:not([type="checkbox"]) {
+        height: 40px;
+        margin: 5px 0;
+        padding: 0 10px;
+        border-radius: 3px;
+        border: 1px solid grey;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .full {
+        display: flex;
+        justify-content: space-between;
+        .first {
+          width: 45%;
+        }
+        .last {
+          width: 50%;
+        }
+      }
+      .submit_btn {
+        text-align: center;
+        margin-top: 10px;
+        button[type="submit"] {
+          cursor: pointer;
+          padding: 0 40px;
+          border-radius: 2px;
+          height: 40px;
+          background-color: $btn-color;
+          border: none;
+          color: white;
+        }
+      }
+    }
+  }
+  .sign_in {
+    @extend .sign_up;
+    .sign_in_form {
+      @extend .sign_up_form;
+    }
+  }
+}
