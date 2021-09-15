@@ -1,5 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import { validationResult } from "express-validator";
+
 export const signIn = async (request, response) => {
   const { email, password } = request.body;
   try {
@@ -9,24 +11,31 @@ export const signIn = async (request, response) => {
 
     //if password is wrong
     if (!checkPassword)
-      return response.status(400).json({ message: "Invalid credentials" });
+      return response
+        .status(400)
+        .json({ error: "Incorrect email or password" });
 
     // const token = jwt.sign({username: oldUser, id: oldUser._id}, 'test', {expiresponseIn: '1h'})
 
     response.status(200).json({ user: oldUser });
-  } catch {
-    response.status(500).json({ message: "Something went wrong" });
+    return;
+  } catch (err) {
+    response.status(500).json({ error: "Incorrect email or password" });
+    return;
   }
 };
 
 export const signUp = async (request, response) => {
   const { firstName, lastName, email, password } = request.body;
   try {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(422).json({ errors: errors.array() });
+    }
     const oldUser = await User.findOne({ email });
     //if user already exists promp message
     if (oldUser)
-      return response.status(404).json({ message: "User Already exist" });
-
+      return response.status(404).json({ message: "Email already exist" });
     // so password wont saved in a plain text
     // 12 - level of dificulty to hash password
 
@@ -38,14 +47,11 @@ export const signUp = async (request, response) => {
       email: email,
       password: hashedPassword,
     });
-
-    newUser
-      .save()
-      .then(() => response.json("User Added"))
-      .catch((err) => response.status(400).json("Error " + err));
-
+    newUser.save();
     response.status(200).json({ user: newUser });
+    return;
   } catch (err) {
     response.status(500).json(`error: ${err}`);
+    return;
   }
 };

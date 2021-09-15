@@ -15,10 +15,12 @@
       flex-direction: column;
       width: 70%;
       height: auto;
-
       label {
         font-weight: bold;
         padding-top: 10px;
+      }
+      .errors {
+        color: red;
       }
       input:not([type="checkbox"]) {
         height: 40px;
