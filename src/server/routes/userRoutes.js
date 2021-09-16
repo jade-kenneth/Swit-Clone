@@ -1,6 +1,7 @@
 import express from "express";
 import { signIn, signUp } from "../controller/userController.js";
 import { check } from "express-validator";
+
 const router = express.Router();
 
 router.post(
@@ -10,12 +11,12 @@ router.post(
       .trim()
       .isLength({ min: 3 })
       .escape()
-      .withMessage("A valid name is required"),
+      .withMessage("A valid first name is required"),
     check("lastName")
       .trim()
       .isLength({ min: 3 })
       .escape()
-      .withMessage("A valid name is required"),
+      .withMessage("A valid last name is required"),
     check("email")
       .trim()
       .isEmail()

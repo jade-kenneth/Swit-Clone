@@ -1,0 +1,11 @@
+GET http://localhost:4000/api/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxNDIxYzQ0NDcwNjkyMGI0ZmE1OTE3YSIsImZpcnN0TmFtZSI6InRlc3QiLCJsYXN0TmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTIkNGQ0aFJXTnFHWkIxaE1VOVYzMnhaTzdXQlBNLi9ubXZDdFI1SnB5QWtHWUU4eU9TY0NIeHEiLCJjcmVhdGVkQXQiOiIyMDIxLTA5LTE1VDE2OjE2OjA0Ljk1OFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTA5LTE1VDE2OjE2OjA0Ljk1OFoiLCJfX3YiOjB9LCJpYXQiOjE2MzE3NzM5NDcsImV4cCI6MTYzMTc3NDAwN30.4wG4vLos-aRva9ys3A_dPo4TT79KAFUjkOHkIQ_JpcE
+
+###
+POST http://localhost:4000/api/signin
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "test12345678"
+}

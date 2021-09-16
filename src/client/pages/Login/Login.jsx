@@ -8,7 +8,7 @@ const Login = () => {
   const { userAction: user, dispatch } = StateProvider();
 
   const [isSignUp, setIsSignUp] = useState(false);
-  // const [message, setMessage] = useState([]);
+  const [message, setMessage] = useState([]);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,20 +30,13 @@ const Login = () => {
   };
   const createAndResponse = async (userData, dispatch) => {
     const responseMessage = await createUsers(userData, dispatch);
-    // setMessage(responseMessage);
-    console.log(responseMessage);
-
-    responseMessage &&
-      responseMessage.errors.forEach((data) => {
-        const { param, msg } = data;
-        console.log(param);
-        setErrorMessage({ [param]: msg });
-      });
+    setMessage(responseMessage);
+    console.log({ ...responseMessage });
   };
   const validateAndResponse = async (userData, dispatch) => {
     const responseMessage = await validateUsers(userData, dispatch);
     // setMessage(responseMessage);
-    setErrorMessage({ incorrect: responseMessage.error });
+    responseMessage && setErrorMessage({ incorrect: responseMessage.error });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -100,18 +93,31 @@ const Login = () => {
           <div className="sign_up">
             <h2>Sign up for free</h2>
 
-            {/* {message.errors && (
-              <div>
+            {message.errors && (
+              <div
+                style={{
+                  border: "1px solid red",
+                  width: "70%",
+                  padding: "0.5rem",
+                  boxSizing: "border-box",
+                }}
+              >
                 {message.errors.map((data, i) => {
                   const { param, msg } = data;
                   return (
-                    <p style={{ color: "red" }} key={i}>
+                    <div
+                      style={{
+                        color: "red",
+                        fontSize: "0.8rem",
+                      }}
+                      key={i}
+                    >
                       {msg}
-                    </p>
+                    </div>
                   );
                 })}
               </div>
-            )} */}
+            )}
             <form className="sign_up_form" onSubmit={handleSubmit}>
               <div className="full">
                 <div className="first">
@@ -135,7 +141,7 @@ const Login = () => {
                   />
                 </div>
               </div>
-              <div className="errors">{errorMessage.lastName}</div>
+
               <label htmlFor="">Email Address</label>
               <input
                 type="text"
@@ -143,7 +149,7 @@ const Login = () => {
                 placeholder="customer@example.com"
                 onChange={handleChange}
               />
-              <div className="errors">{errorMessage.email}</div>
+
               <label htmlFor="">Password</label>
               <input
                 type="password"
@@ -151,7 +157,7 @@ const Login = () => {
                 name="password"
                 onChange={handleChange}
               />
-              <div className="errors">{errorMessage.password}</div>
+
               <div className="submit_btn">
                 <button type="submit">Sign up</button>
               </div>

@@ -10,17 +10,17 @@ export const signIn = async (request, response) => {
     const checkPassword = await bcrypt.compare(password, oldUser.password);
 
     //if password is wrong
-    if (!checkPassword)
+    if (!checkPassword) {
       return response
         .status(400)
         .json({ error: "Incorrect email or password" });
+    }
 
-    // const token = jwt.sign({username: oldUser, id: oldUser._id}, 'test', {expiresponseIn: '1h'})
-
+    // response.header("auth-token", token).send(token);
     response.status(200).json({ user: oldUser });
     return;
   } catch (err) {
-    response.status(500).json({ error: "Incorrect email or password" });
+    response.status(500).json({ error: `${err}` });
     return;
   }
 };
@@ -33,9 +33,11 @@ export const signUp = async (request, response) => {
       return response.status(422).json({ errors: errors.array() });
     }
     const oldUser = await User.findOne({ email });
+
     //if user already exists promp message
     if (oldUser)
       return response.status(404).json({ message: "Email already exist" });
+
     // so password wont saved in a plain text
     // 12 - level of dificulty to hash password
 
@@ -48,6 +50,7 @@ export const signUp = async (request, response) => {
       password: hashedPassword,
     });
     newUser.save();
+
     response.status(200).json({ user: newUser });
     return;
   } catch (err) {
