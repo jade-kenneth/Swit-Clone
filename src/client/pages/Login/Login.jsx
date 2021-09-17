@@ -54,7 +54,7 @@ const Login = () => {
   };
   return (
     <>
-      {user.isLogged && <Redirect to="api/channel" />}
+      {user.isLogged && <Redirect to="swit/home" />}
       <div className="login_container">
         {!isSignUp ? (
           <div className="sign_in">
@@ -103,7 +103,7 @@ const Login = () => {
                 }}
               >
                 {message.errors.map((data, i) => {
-                  const { param, msg } = data;
+                  const { msg } = data;
                   return (
                     <div
                       style={{

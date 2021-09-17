@@ -1,0 +1,40 @@
+@import "../../../scss/abstract/index";
+
+.header {
+  display: flex;
+  gap: 50px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgb(211, 209, 209);
+  .mention {
+    padding: 0.5rem;
+    background-color: grey;
+    border-radius: 50%;
+  }
+  .activity {
+    padding: 0.5rem;
+    background-color: grey;
+    border-radius: 50%;
+  }
+  .branding {
+    margin-right: auto;
+    display: flex;
+    h3,
+    h5 {
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .customAvatar {
+    padding: 0.3rem;
+    width: 26px;
+    height: 26px;
+    @include flexCenter;
+    background: wheat;
+    border-radius: 50%;
+    h2 {
+      text-transform: uppercase;
+    }
+  }
+}

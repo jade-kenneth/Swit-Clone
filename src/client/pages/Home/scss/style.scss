@@ -1,0 +1,78 @@
+@import "../../../scss/abstract/index";
+.customAvatar {
+  padding: 0.3rem;
+  width: 70px;
+  height: 70px;
+  @include flexCenter;
+  background: #a5d322;
+  border-radius: 50%;
+  h2 {
+    text-transform: uppercase;
+  }
+}
+.userProfile {
+  position: absolute;
+  top: 20%;
+  left: 15%;
+
+  width: 1200px;
+  height: auto;
+  .allWorkspaces {
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .workspace {
+    margin-top: 10px;
+    height: 250px;
+    width: 250px;
+    flex-wrap: wrap;
+    @include flexCenterDirection(column);
+    background-color: rgb(230, 220, 220);
+    .form_workspace {
+      @include flexCenterDirection(column);
+      height: 100%;
+      width: 100%;
+      input {
+        flex: 1;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.5rem;
+        outline: none;
+        background-color: #f9f9f8;
+        border: 1px solid #8d8d89;
+      }
+      button {
+        flex: 3;
+        width: 100%;
+        cursor: pointer;
+        background-color: rgb(243, 240, 240);
+        border: 1px solid #f9f9f8;
+        &:hover {
+          background-color: #e2e2dd;
+        }
+      }
+    }
+  }
+}
+.head {
+  display: flex;
+  gap: 10px;
+}
+
+.login_indicator {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: #a5d322;
+}
+.column {
+  @include flexCenterDirection(column);
+
+  h2,
+  p {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+}

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import userRoute from "./routes/userRoutes.js";
+import workspaceRoute from "./routes/workspaceRoute.js";
 const app = express();
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use(cors());
 app.use("/api", userRoute);
+app.use("/api", workspaceRoute);
 
 mongoose
   .connect(process.env.DATABASE_ACCESS, {

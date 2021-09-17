@@ -15,12 +15,10 @@ export const signIn = async (request, response) => {
         .status(400)
         .json({ error: "Incorrect email or password" });
     }
-
-    // response.header("auth-token", token).send(token);
     response.status(200).json({ user: oldUser });
     return;
   } catch (err) {
-    response.status(500).json({ error: `${err}` });
+    response.status(500).json({ error: "Incorrect email or password" });
     return;
   }
 };
