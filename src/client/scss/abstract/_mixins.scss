@@ -4,8 +4,12 @@
   justify-content: center;
   flex-direction: $direction;
 }
-@mixin flexCenter(){
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@mixin flexCenter() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flexDirection($direction) {
+  display: flex;
+  flex-direction: $direction;
 }

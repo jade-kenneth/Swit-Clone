@@ -1,5 +1,5 @@
 import express from "express";
-import { signIn, signUp } from "../controller/userController.js";
+import { getAllUser, signIn, signUp } from "../controller/userController.js";
 import { check } from "express-validator";
 
 const router = express.Router();
@@ -31,5 +31,6 @@ router.post(
   signUp
 );
 router.post("/signin", signIn);
+router.get("/allUser", getAllUser);
 
 export default router;

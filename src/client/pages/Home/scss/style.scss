@@ -4,7 +4,7 @@
   width: 70px;
   height: 70px;
   @include flexCenter;
-  background: #a5d322;
+  background: $avatar-bg;
   border-radius: 50%;
   h2 {
     text-transform: uppercase;

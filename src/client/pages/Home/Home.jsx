@@ -9,10 +9,11 @@ const Home = () => {
   const [workspace, setWorkspace] = useState("");
   const [allWorkspaceCreated, setAllWorkspace] = useState("");
   const [toggle, setToggle] = useState(false);
-  console.log("refresh");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = {
+      workspaceCreator: user.userLoginData.user._id,
       workspaceName: workspace,
     };
     newWorkSpace(userData);
@@ -22,12 +23,11 @@ const Home = () => {
   };
   useEffect(() => {
     async function getAllWorkspaceCreated() {
-      const res = await getAllWorkspace();
+      const res = await getAllWorkspace(user.userLoginData.user._id);
       console.log(res);
       setAllWorkspace(res);
     }
     getAllWorkspaceCreated();
-    console.log(allWorkspaceCreated);
   }, [toggle]);
 
   return (
@@ -84,7 +84,7 @@ const Home = () => {
                 onChange={(e) => setWorkspace(e.target.value)}
               />
               <button
-                onClick={() => setToggle(!toggle)}
+                onClick={() => setToggle((prev) => !prev)}
                 type="submit"
                 disabled={!workspace}
               >
@@ -102,12 +102,11 @@ const Home = () => {
                 console.log(_id);
                 return (
                   <Link
+                    key={_id}
                     to={`/swit/channel/${_id}`}
                     style={{ textDecoration: "none" }}
                   >
-                    <div className="workspace" key={_id}>
-                      {workspaceName}
-                    </div>
+                    <div className="workspace">{workspaceName}</div>
                   </Link>
                 );
               })}

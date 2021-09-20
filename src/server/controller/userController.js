@@ -34,7 +34,7 @@ export const signUp = async (request, response) => {
 
     //if user already exists promp message
     if (oldUser)
-      return response.status(404).json({ message: "Email already exist" });
+      return response.status(404).json({ message: "Email already in used" });
 
     // so password wont saved in a plain text
     // 12 - level of dificulty to hash password
@@ -54,5 +54,14 @@ export const signUp = async (request, response) => {
   } catch (err) {
     response.status(500).json(`error: ${err}`);
     return;
+  }
+};
+export const getAllUser = async (request, response) => {
+  try {
+    const allUser = await User.find({});
+    response.status(200).json(allUser);
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).json(error.message);
   }
 };

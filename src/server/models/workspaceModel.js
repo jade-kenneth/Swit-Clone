@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const workspaceSchema = mongoose.Schema(
   {
+    workspaceCreator: {
+      type: String,
+    },
     workspaceName: {
       type: String,
       required: true,

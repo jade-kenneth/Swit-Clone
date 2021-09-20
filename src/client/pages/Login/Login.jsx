@@ -5,7 +5,7 @@ import { StateProvider } from "../../Context/StateContext";
 import { Redirect } from "react-router-dom";
 
 const Login = () => {
-  const { userAction: user, dispatch } = StateProvider();
+  const { userAction: user, dispatch, isFetching } = StateProvider();
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState([]);
@@ -22,6 +22,7 @@ const Login = () => {
     password: "",
     incorrect: "",
   });
+  console.log(isFetching);
   const handleChange = (e) => {
     e.preventDefault();
     const name = e.target.name;
@@ -31,7 +32,6 @@ const Login = () => {
   const createAndResponse = async (userData, dispatch) => {
     const responseMessage = await createUsers(userData, dispatch);
     setMessage(responseMessage);
-    console.log({ ...responseMessage });
   };
   const validateAndResponse = async (userData, dispatch) => {
     const responseMessage = await validateUsers(userData, dispatch);
@@ -81,7 +81,10 @@ const Login = () => {
                 <label htmlFor="checkBox">Remember me</label>
               </div>
               <div className="submit_btn">
-                <button type="submit">Sign in</button>
+                <button type="submit" disabled={isFetching}>
+                  {" "}
+                  {isFetching ? "Please wait..." : "Sign in"}
+                </button>
               </div>
             </form>
             <p>
@@ -149,7 +152,7 @@ const Login = () => {
                 placeholder="customer@example.com"
                 onChange={handleChange}
               />
-
+              <div className="errors">{message.message}</div>
               <label htmlFor="">Password</label>
               <input
                 type="password"
@@ -159,7 +162,9 @@ const Login = () => {
               />
 
               <div className="submit_btn">
-                <button type="submit">Sign up</button>
+                <button type="submit" disabled={isFetching}>
+                  {isFetching ? "Please wait..." : "Sign up"}
+                </button>
               </div>
             </form>
             <p>

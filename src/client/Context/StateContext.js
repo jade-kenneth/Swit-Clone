@@ -20,7 +20,9 @@ export function StateContextProvider({ children }) {
   }, [userAction]);
 
   return (
-    <StateContext.Provider value={{ userAction, dispatch }}>
+    <StateContext.Provider
+      value={{ userAction, dispatch, isFetching: userAction.isFetching }}
+    >
       {children}
     </StateContext.Provider>
   );
