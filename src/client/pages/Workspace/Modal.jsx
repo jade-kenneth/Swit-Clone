@@ -5,24 +5,38 @@ import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { StateProvider } from "../../Context/StateContext";
 import uuid from "uuid/dist/v4";
 import { newChannel } from "../../actions/workspaceActions";
-const Modal = ({ setToggleCreateChannel, workspaceId }) => {
+const Modal = ({
+  isMember,
+  workspaceName,
+  setToggleCreateChannel,
+  workspaceId,
+  workspaceCreator,
+}) => {
   //NEXT GET ALL USER AND DISPLAY TO MODAL
   const { userAction: user } = StateProvider();
   let [allUsers, setAllUser] = useState("");
   const [channel, setChannel] = useState("");
-  const [channelMembers, setChannelMembers] = useState([]);
+  //include user as one of channel members
+  const [channelMembers, setChannelMembers] = useState([
+    user.userLoginData.user,
+  ]);
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const channelData = {
       _id: uuid(),
+      workspaceId: workspaceId,
+      workspaceName: workspaceName,
+      workspaceCreator: workspaceCreator,
       channelName: channel,
+      isMember: isMember,
       channelMembers: channelMembers,
     };
     console.log(channelData);
     newChannel(workspaceId, channelData);
     setToggleCreateChannel(false);
   };
+
   //insert channel data
   useEffect(() => {
     async function getAllUsers() {
@@ -34,7 +48,6 @@ const Modal = ({ setToggleCreateChannel, workspaceId }) => {
     getAllUsers();
   }, []);
   useEffect(() => {}, [channel]);
-  console.log(channelMembers);
 
   return (
     <>
@@ -86,7 +99,9 @@ const Modal = ({ setToggleCreateChannel, workspaceId }) => {
                         <AiOutlineCheckCircle
                           className="add"
                           onClick={() => {
+                            //add channel member
                             setChannelMembers((prev) => [...prev, data]);
+                            //remove user when adding to channel member
                             setAllUser(
                               allUsers.filter((data) => data._id !== _id)
                             );
@@ -104,28 +119,38 @@ const Modal = ({ setToggleCreateChannel, workspaceId }) => {
               {channelMembers &&
                 channelMembers.map((data) => {
                   const { _id, firstName, lastName } = data;
-                  const user = `${firstName} ${lastName}`;
+
+                  const userFullName = `${firstName} ${lastName}`;
+
                   return (
+                    //do not render user in user_added UI
                     <React.Fragment key={_id}>
-                      <div className="eachUser">
-                        <div className="customAvatar">
-                          <h2>{`${user.substring(0, 1)}${user
-                            .split(" ")[1]
-                            .substring(0, 1)}`}</h2>
+                      {_id !== user.userLoginData.user._id && (
+                        <div className="eachUser">
+                          <div className="customAvatar">
+                            <h2>{`${userFullName.substring(0, 1)}${userFullName
+                              .split(" ")[1]
+                              .substring(0, 1)}`}</h2>
+                          </div>
+
+                          <h5>
+                            {firstName} {lastName}
+                          </h5>
+                          <AiOutlineCloseCircle
+                            className="unAdd"
+                            onClick={() => {
+                              // set new all user after filter
+                              setAllUser((prev) => [...prev, data]);
+                              // filter data when removing
+                              setChannelMembers(
+                                channelMembers.filter(
+                                  (data) => data._id !== _id
+                                )
+                              );
+                            }}
+                          />
                         </div>
-                        <h5>
-                          {firstName} {lastName}
-                        </h5>
-                        <AiOutlineCloseCircle
-                          className="unAdd"
-                          onClick={() => {
-                            setAllUser((prev) => [...prev, data]);
-                            setChannelMembers(
-                              channelMembers.filter((data) => data._id !== _id)
-                            );
-                          }}
-                        />
-                      </div>
+                      )}
                     </React.Fragment>
                   );
                 })}

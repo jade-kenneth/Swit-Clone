@@ -7,16 +7,15 @@ import ChannelNav from "./ChannelNav";
 import { useParams } from "react-router-dom";
 import { BsChat } from "react-icons/bs";
 import { IoCheckbox } from "react-icons/io5";
-import Chat from "./Chat";
+import Chat from "./ChatSystem/Chat";
 import Modal from "./Modal";
 import { getWorkspace } from "../../actions/workspaceActions";
 const Workspace = () => {
-  const { userAction: user, dispatch } = StateProvider();
-  const { workspaceId } = useParams();
+  const { userAction: user } = StateProvider();
+  const { workspaceName, workspaceId } = useParams();
   const [activeWorkspace, setActiveWorkspace] = useState("");
   const [toggleCreateChannel, setToggleCreateChannel] = useState(false);
   const [activeChannel, setActiveChannel] = useState("");
-  console.log(workspaceId);
 
   useEffect(() => {
     async function getActiveWorkspace() {
@@ -25,16 +24,21 @@ const Workspace = () => {
       setActiveWorkspace(res);
     }
     getActiveWorkspace();
-  }, [workspaceId, toggleCreateChannel]);
-  console.log(activeChannel);
-  activeWorkspace && console.log(activeWorkspace);
+  }, [toggleCreateChannel]);
+
   return (
     <>
       <div className="container">
         <div>
           {activeWorkspace &&
             activeWorkspace.map((data) => {
-              const { _id, workspaceName, channels, directedMessages } = data;
+              const {
+                _id,
+                isMember,
+                workspaceName,
+                channels,
+                directedMessages,
+              } = data;
               return (
                 <React.Fragment key={_id}>
                   <Header
@@ -68,6 +72,7 @@ const Workspace = () => {
                         directedMessages={directedMessages}
                         setToggleCreateChannel={setToggleCreateChannel}
                         setActiveChannel={setActiveChannel}
+                        isMember={isMember}
                       />
                     </div>
                     <div className="chats">
@@ -77,7 +82,10 @@ const Workspace = () => {
                       <div className="channel_creation_modal">
                         <Modal
                           workspaceId={workspaceId}
+                          workspaceName={workspaceName}
                           setToggleCreateChannel={setToggleCreateChannel}
+                          isMember={isMember}
+                          workspaceCreator={user.userLoginData.user._id}
                         />
                       </div>
                     )}

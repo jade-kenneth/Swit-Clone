@@ -5,6 +5,9 @@ const workspaceSchema = mongoose.Schema(
     workspaceCreator: {
       type: String,
     },
+    isMember: {
+      type: Boolean,
+    },
     workspaceName: {
       type: String,
       required: true,

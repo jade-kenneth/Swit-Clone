@@ -5,7 +5,9 @@ const ChannelNav = ({
   directedMessages,
   setToggleCreateChannel,
   setActiveChannel,
+  isMember,
 }) => {
+  console.log(channels);
   return (
     <>
       <div className="column">
@@ -15,7 +17,9 @@ const ChannelNav = ({
               <h5>Channels</h5>
               <div>
                 <button
-                  onClick={() => setToggleCreateChannel(true)}
+                  onClick={() => {
+                    setToggleCreateChannel(true);
+                  }}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -23,6 +27,7 @@ const ChannelNav = ({
                   }}
                 >
                   <IoIosAddCircleOutline />
+
                   <p style={{ padding: "0", margin: "0" }}>Create Channel</p>
                 </button>
               </div>
@@ -35,7 +40,9 @@ const ChannelNav = ({
                   <h5
                     key={_id}
                     className="eachChannels"
-                    onClick={() => setActiveChannel(data)}
+                    onClick={() => {
+                      setActiveChannel(data);
+                    }}
                   >
                     {channelName}
                   </h5>

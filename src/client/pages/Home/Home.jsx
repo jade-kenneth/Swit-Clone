@@ -10,24 +10,24 @@ const Home = () => {
   const [allWorkspaceCreated, setAllWorkspace] = useState("");
   const [toggle, setToggle] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setToggle(!toggle);
     const userData = {
+      isMember: false,
       workspaceCreator: user.userLoginData.user._id,
       workspaceName: workspace,
     };
     newWorkSpace(userData);
     setWorkspace("");
-    setToggle(!toggle);
-    <Redirect to="/swit/home" />;
   };
+  console.log("toggle: ", toggle);
   useEffect(() => {
-    async function getAllWorkspaceCreated() {
+    (async function getAllWorkspaceCreated() {
       const res = await getAllWorkspace(user.userLoginData.user._id);
-      console.log(res);
+      console.log("the res", res);
       setAllWorkspace(res);
-    }
-    getAllWorkspaceCreated();
+    })();
   }, [toggle]);
 
   return (
@@ -83,11 +83,7 @@ const Home = () => {
                 autoComplete="off"
                 onChange={(e) => setWorkspace(e.target.value)}
               />
-              <button
-                onClick={() => setToggle((prev) => !prev)}
-                type="submit"
-                disabled={!workspace}
-              >
+              <button type="submit" disabled={!workspace}>
                 + Build Workspace
               </button>
             </form>
@@ -98,15 +94,18 @@ const Home = () => {
               .slice(0)
               .reverse()
               .map((data) => {
-                const { _id, workspaceName } = data;
-                console.log(_id);
+                const { _id, isMember, workspaceName } = data;
+
                 return (
                   <Link
                     key={_id}
                     to={`/swit/channel/${_id}`}
                     style={{ textDecoration: "none" }}
                   >
-                    <div className="workspace">{workspaceName}</div>
+                    <div className="workspace">
+                      {workspaceName}
+                      <h3>{isMember ? "Member" : "Master"}</h3>
+                    </div>
                   </Link>
                 );
               })}

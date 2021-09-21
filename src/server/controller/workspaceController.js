@@ -1,8 +1,9 @@
 import Workspace from "../models/workspaceModel.js";
 
 export const newWorkSpace = async (request, response) => {
-  const { workspaceName, workspaceCreator } = request.body;
+  const { workspaceName, workspaceCreator, isMember } = request.body;
   const newWorkSpace = await Workspace({
+    isMember: isMember,
     workspaceCreator: workspaceCreator,
     workspaceName: workspaceName,
   });
@@ -39,17 +40,74 @@ export const getWorkspace = async (request, response) => {
 };
 export const newChannel = async (request, response) => {
   const workspaceId = request.params.workspaceId;
-  console.log(workspaceId);
+
+  const {
+    _id,
+
+    isMember,
+    workspaceName,
+    workspaceCreator,
+    channelName,
+    channelMembers,
+  } = request.body;
+
   try {
     const newChannel = await Workspace.findOneAndUpdate(
       { _id: workspaceId },
       {
         $push: {
-          channels: request.body,
+          channels: {
+            _id: _id,
+            channelName: channelName,
+            channelMembers: channelMembers,
+          },
         },
       },
       { new: true, useFindandModify: false }
     );
+    //available data workspaceCreator
+    //wokrspaceName
+    //isMember
+    channelMembers.forEach(async (data) => {
+      const { _id: workspaceAuthorized } = data;
+      let newChannel = "";
+      //check if this workspaces are already created
+      //since creator is also in chat member then neglect finding its workspace
+      //to avoid duplicate channel
+      if (workspaceCreator !== workspaceAuthorized) {
+        newChannel = await Workspace.findOneAndUpdate(
+          {
+            workspaceCreator: workspaceAuthorized,
+            workspaceName: workspaceName,
+          },
+          {
+            $push: {
+              channels: {
+                _id: _id,
+                channelName: channelName,
+                channelMembers: channelMembers,
+              },
+            },
+          },
+          { new: true, useFindandModify: false }
+        );
+      }
+
+      if (workspaceCreator !== workspaceAuthorized && newChannel === null) {
+        const newWorkSpace = await Workspace({
+          isMember: true,
+
+          workspaceCreator: workspaceAuthorized,
+          workspaceName: workspaceName,
+          channels: {
+            _id: _id,
+            channelName: channelName,
+            channelMembers: channelMembers,
+          },
+        });
+        await newWorkSpace.save();
+      }
+    });
 
     response.status(200).json(newChannel);
   } catch (error) {
