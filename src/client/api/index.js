@@ -14,3 +14,5 @@ export const getAllUser = () => axios.get(`${url}/allUser`);
 
 export const newChannel = (workspaceId, channelData) =>
   axios.put(`${url}/workspace/newChannel/${workspaceId}`, channelData);
+export const getChannel = (channelId) =>
+  axios.put(`${url}/workspace/getChannel`, channelId);

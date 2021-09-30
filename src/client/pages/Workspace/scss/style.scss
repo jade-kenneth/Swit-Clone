@@ -143,9 +143,15 @@
   }
   .header {
     .memberList {
-      height: 100px;
-      width: 100px;
-      border: 1px solid red;
+      padding: 1rem;
+      box-sizing: border-box;
+      height: 200px;
+      width: 250px;
+      position: absolute;
+      right: 10px;
+      top: 15%;
+      @include flexDirection(column);
+      background-color: rgb(211, 210, 210);
     }
   }
 }

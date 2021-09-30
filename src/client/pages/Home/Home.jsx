@@ -1,15 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
+
+import { io } from "socket.io-client";
 import { newWorkSpace, getAllWorkspace } from "../../actions/workspaceActions";
 import { StateProvider } from "../../Context/StateContext";
 
 import "./scss/style.scss";
 const Home = () => {
+  const socket = useRef(null);
   const { userAction: user, dispatch } = StateProvider();
   const [workspace, setWorkspace] = useState("");
   const [allWorkspaceCreated, setAllWorkspace] = useState("");
   const [toggle, setToggle] = useState(false);
+  useEffect(() => {
+    socket.current = io("ws://localhost:5000");
+  }, []);
 
+  useEffect(() => {
+    //send event to server
+    //user who connect will send their id to socket server
+    //to initialize their socket id
+    socket.current.emit("sendUser", user.userLoginData.user._id);
+    //get from server
+    // socket.current.on("getUsers", (users) => {
+    //   // setOnline(users);
+    // });
+  }, [user]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setToggle(!toggle);
@@ -18,17 +34,22 @@ const Home = () => {
       workspaceCreator: user.userLoginData.user._id,
       workspaceName: workspace,
     };
-    newWorkSpace(userData);
+    await newWorkSpace(userData);
     setWorkspace("");
+    (async function getAllWorkspaceCreated() {
+      const res = await getAllWorkspace(user.userLoginData.user._id);
+
+      setAllWorkspace(res);
+    })();
   };
-  console.log("toggle: ", toggle);
+
   useEffect(() => {
     (async function getAllWorkspaceCreated() {
       const res = await getAllWorkspace(user.userLoginData.user._id);
-      console.log("the res", res);
+
       setAllWorkspace(res);
     })();
-  }, [toggle]);
+  }, [user.userLoginData.user._id]);
 
   return (
     <div>

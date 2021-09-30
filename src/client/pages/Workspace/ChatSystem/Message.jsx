@@ -14,7 +14,7 @@ const Message = ({ time, message, messageOwner, name }) => {
             <h4>Weaver</h4>
             <div className="message-time">12:44</div>
           </div>
-          <p>Hello</p>
+          <p>{message}</p>
         </div>
       </div>
     </div>

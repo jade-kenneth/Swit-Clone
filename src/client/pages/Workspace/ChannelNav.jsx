@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
+
 const ChannelNav = ({
   channels,
   directedMessages,
   setToggleCreateChannel,
   setActiveChannel,
   isMember,
+  socket,
+  channelRef,
+  workspaceId,
+  userId,
 }) => {
-  console.log(channels);
+  useEffect(() => {
+    socket.on("room-created", (room, channelMembers) => {
+      // const newElement = document.createElement("h5");
+      // newElement.setAttribute("class", "eachChannels");
+
+      // newElement.onclick = function (event) {};
+      // console.log("im here");
+      // newElement.innerText = room;
+      // channelRef.current?.appendChild(newElement);
+      channelMembers.find((data) => data._id === userId) &&
+        socket.emit("join-room", room);
+    });
+    socket.on("room", (room) => {
+      const newElement = document.createElement("h5");
+      newElement.setAttribute("class", "eachChannels");
+
+      newElement.onclick = function (event) {
+        console.log("shared");
+      };
+      console.log(userId);
+      newElement.innerText = room;
+      channelRef.current?.appendChild(newElement);
+    });
+  }, []);
   return (
     <>
       <div className="column">
@@ -33,15 +61,17 @@ const ChannelNav = ({
               </div>
             </div>
 
-            <div className="allChannels">
+            <div className="allChannels" ref={channelRef}>
               {channels.map((data) => {
-                const { _id, channelName, channelMembers } = data;
+                const { _id, channelName } = data;
+
                 return (
                   <h5
                     key={_id}
                     className="eachChannels"
                     onClick={() => {
                       setActiveChannel(data);
+                      // socket.emit("room-created", _id);
                     }}
                   >
                     {channelName}

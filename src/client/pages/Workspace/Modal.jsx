@@ -11,16 +11,18 @@ const Modal = ({
   setToggleCreateChannel,
   workspaceId,
   workspaceCreator,
+  socket,
 }) => {
   //NEXT GET ALL USER AND DISPLAY TO MODAL
   const { userAction: user } = StateProvider();
   let [allUsers, setAllUser] = useState("");
   const [channel, setChannel] = useState("");
   //include user as one of channel members
+  const [memberId, setMemberId] = useState("");
   const [channelMembers, setChannelMembers] = useState([
     user.userLoginData.user,
   ]);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const channelData = {
@@ -32,8 +34,19 @@ const Modal = ({
       isMember: isMember,
       channelMembers: channelMembers,
     };
-    console.log(channelData);
-    newChannel(workspaceId, channelData);
+
+    await newChannel(workspaceId, channelData);
+    const channelMembersWithoutUser = channelMembers.filter(
+      (data) => data._id !== user.userLoginData.user._id
+    );
+
+    socket.emit(
+      "send-socket-server",
+      channelData.channelName,
+      channelMembersWithoutUser
+    );
+    // socket.emit("channel-created", channelData);
+
     setToggleCreateChannel(false);
   };
 

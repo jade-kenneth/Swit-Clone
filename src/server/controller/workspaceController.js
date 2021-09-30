@@ -1,3 +1,4 @@
+import { request, response } from "express";
 import Workspace from "../models/workspaceModel.js";
 
 export const newWorkSpace = async (request, response) => {
@@ -21,7 +22,6 @@ export const getAllWorkspace = async (request, response) => {
     const workspace = await Workspace.find({
       workspaceCreator: workspaceCreator,
     });
-
     response.status(200).json(workspace);
   } catch (error) {
     response.status(500).json(error.message);
@@ -41,15 +41,8 @@ export const getWorkspace = async (request, response) => {
 export const newChannel = async (request, response) => {
   const workspaceId = request.params.workspaceId;
 
-  const {
-    _id,
-
-    isMember,
-    workspaceName,
-    workspaceCreator,
-    channelName,
-    channelMembers,
-  } = request.body;
+  const { _id, workspaceName, workspaceCreator, channelName, channelMembers } =
+    request.body;
 
   try {
     const newChannel = await Workspace.findOneAndUpdate(
@@ -112,6 +105,17 @@ export const newChannel = async (request, response) => {
     response.status(200).json(newChannel);
   } catch (error) {
     console.log(error.message);
+    response.status(500).json(error.message);
+  }
+};
+export const getChannel = async (request, response) => {
+  const { channelId, workspaceId } = request.body;
+  try {
+    const workspace = await Workspace.aggregate({
+      _id: workspaceId,
+    });
+    response.status(200).json(workspace);
+  } catch (error) {
     response.status(500).json(error.message);
   }
 };

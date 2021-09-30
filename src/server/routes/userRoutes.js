@@ -11,12 +11,12 @@ router.post(
       .trim()
       .isLength({ min: 3 })
       .escape()
-      .withMessage("A valid first name is required"),
+      .withMessage("A valid name is required"),
     check("lastName")
       .trim()
       .isLength({ min: 3 })
       .escape()
-      .withMessage("A valid last name is required"),
+      .withMessage("A valid name is required"),
     check("email")
       .trim()
       .isEmail()

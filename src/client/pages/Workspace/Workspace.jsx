@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "./Header";
 import "./scss/style.scss";
 import { StateProvider } from "../../Context/StateContext";
@@ -10,17 +10,34 @@ import { IoCheckbox } from "react-icons/io5";
 import Chat from "./ChatSystem/Chat";
 import Modal from "./Modal";
 import { getWorkspace } from "../../actions/workspaceActions";
+import { io } from "socket.io-client";
+
 const Workspace = () => {
   const { userAction: user } = StateProvider();
   const { workspaceName, workspaceId } = useParams();
   const [activeWorkspace, setActiveWorkspace] = useState("");
   const [toggleCreateChannel, setToggleCreateChannel] = useState(false);
   const [activeChannel, setActiveChannel] = useState("");
+  const socket = useRef(null);
+  const channelRef = useRef(null);
+  useEffect(() => {
+    socket.current = io("ws://localhost:5000");
+  }, []);
 
+  useEffect(() => {
+    //send event to server
+    //user who connect will send their id to socket server
+    //to initialize their socket id
+    socket.current.emit("sendUser", user.userLoginData.user._id);
+    //get from server
+    // socket.current.on("getUsers", (users) => {
+    //   // setOnline(users);
+    // });
+  }, [user]);
   useEffect(() => {
     async function getActiveWorkspace() {
       const res = await getWorkspace(workspaceId);
-      console.log(res);
+
       setActiveWorkspace(res);
     }
     getActiveWorkspace();
@@ -39,6 +56,7 @@ const Workspace = () => {
                 channels,
                 directedMessages,
               } = data;
+
               return (
                 <React.Fragment key={_id}>
                   <Header
@@ -73,10 +91,18 @@ const Workspace = () => {
                         setToggleCreateChannel={setToggleCreateChannel}
                         setActiveChannel={setActiveChannel}
                         isMember={isMember}
+                        socket={socket.current}
+                        channelRef={channelRef}
+                        workspaceId={workspaceId}
+                        userId={user.userLoginData.user._id}
                       />
                     </div>
                     <div className="chats">
-                      <Chat activeChannel={activeChannel} />
+                      <Chat
+                        activeChannel={activeChannel}
+                        socket={socket.current}
+                        user={user.userLoginData.user.firstName}
+                      />
                     </div>
                     {toggleCreateChannel && (
                       <div className="channel_creation_modal">
@@ -86,6 +112,7 @@ const Workspace = () => {
                           setToggleCreateChannel={setToggleCreateChannel}
                           isMember={isMember}
                           workspaceCreator={user.userLoginData.user._id}
+                          socket={socket.current}
                         />
                       </div>
                     )}

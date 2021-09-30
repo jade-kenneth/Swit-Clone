@@ -29,9 +29,7 @@ const Header = ({ user, workspaceName }) => {
           }}
         >
           {" "}
-          {`${workspaceName.substring(0, 1)}${workspaceName
-            .split(" ")[1]
-            .substring(0, 1)}`}
+          {`${workspaceName.substring(0, 1)}`}
         </h3>
         <h4
           style={{

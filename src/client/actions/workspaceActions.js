@@ -31,9 +31,18 @@ export const getWorkspace = async (workspaceId) => {
 };
 //
 export const newChannel = async (workspaceId, channelData) => {
-  console.log(workspaceId, channelData);
   try {
     const { data } = await api.newChannel(workspaceId, channelData);
+
+    return data;
+  } catch (error) {
+    console.log(error.message);
+    // dispatch({type: "INCORRECT_CREDENTIALS", message: 'Incrorrect username or password', messageType: 'error'})
+  }
+};
+export const getChannel = async (channelId, workspaceId) => {
+  try {
+    const { data } = await api.getChannel(channelId, workspaceId);
 
     return data;
   } catch (error) {

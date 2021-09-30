@@ -9,6 +9,8 @@ const Login = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState([]);
+  let errors = {};
+  const [error, setError] = useState({});
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,7 +24,7 @@ const Login = () => {
     password: "",
     incorrect: "",
   });
-  console.log(isFetching);
+
   const handleChange = (e) => {
     e.preventDefault();
     const name = e.target.name;
@@ -32,11 +34,19 @@ const Login = () => {
   const createAndResponse = async (userData, dispatch) => {
     const responseMessage = await createUsers(userData, dispatch);
     setMessage(responseMessage);
+    responseMessage &&
+      responseMessage.errors.forEach((data) => {
+        const { param, msg } = data;
+        errors[`${param}`] = msg;
+      });
+    setError(errors);
   };
+  console.log(error);
+
   const validateAndResponse = async (userData, dispatch) => {
     const responseMessage = await validateUsers(userData, dispatch);
     // setMessage(responseMessage);
-    responseMessage && setErrorMessage({ incorrect: responseMessage.error });
+    responseMessage && setError({ incorrect: responseMessage.error });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,7 +85,7 @@ const Login = () => {
                 name="password"
                 onChange={handleChange}
               />
-              <div className="errors">{errorMessage.incorrect}</div>
+              <div className="errors">{error.incorrect}</div>
               <div className="checkbox">
                 <input type="checkbox" id="checkBox" />
                 <label htmlFor="checkBox">Remember me</label>
@@ -96,7 +106,7 @@ const Login = () => {
           <div className="sign_up">
             <h2>Sign up for free</h2>
 
-            {message.errors && (
+            {/* {message.errors && (
               <div
                 style={{
                   border: "1px solid red",
@@ -120,7 +130,7 @@ const Login = () => {
                   );
                 })}
               </div>
-            )}
+            )} */}
             <form className="sign_up_form" onSubmit={handleSubmit}>
               <div className="full">
                 <div className="first">
@@ -133,6 +143,7 @@ const Login = () => {
                     onChange={handleChange}
                   />
                 </div>
+
                 <div className="last">
                   <label htmlFor="lastName">Last name</label>
                   <input
@@ -144,7 +155,7 @@ const Login = () => {
                   />
                 </div>
               </div>
-
+              <div className="errors">{error.firstName}</div>
               <label htmlFor="">Email Address</label>
               <input
                 type="text"
@@ -153,6 +164,7 @@ const Login = () => {
                 onChange={handleChange}
               />
               <div className="errors">{message.message}</div>
+              <div className="errors">{error.email}</div>
               <label htmlFor="">Password</label>
               <input
                 type="password"
@@ -160,7 +172,7 @@ const Login = () => {
                 name="password"
                 onChange={handleChange}
               />
-
+              <div className="errors">{error.password}</div>
               <div className="submit_btn">
                 <button type="submit" disabled={isFetching}>
                   {isFetching ? "Please wait..." : "Sign up"}
